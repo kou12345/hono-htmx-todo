@@ -4,28 +4,32 @@ import type { FC } from "hono/jsx";
 
 import Database from "better-sqlite3";
 import { BetterSQLite3Database, drizzle } from "drizzle-orm/better-sqlite3";
+import { Item } from "./components/item";
+import { renderer } from "./components/layout";
 import { todos } from "./schema";
+import { Todo } from "./types";
 
 const sqlite = new Database("sqlite.db");
 console.log("sqlite", sqlite);
 const db: BetterSQLite3Database = drizzle(sqlite);
 
-type Todo = {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
 const app = new Hono();
+
+app.get("*", renderer);
+
 app.get("/", async (c) => {
   console.log("todos");
   const result: Todo[] = await db.select().from(todos);
   console.log(result);
-  return c.html(<Top todos={result} />);
+  return c.render(
+    <div>
+      {result.map((todo: Todo) => (
+        <Item todo={todo} />
+      ))}
+    </div>
+  );
 });
+// app.get("*", renderer);
 
 app.get("/htmx", (c) => {
   console.log("htmx");
@@ -44,7 +48,6 @@ app.get("/htmx", (c) => {
 const Top: FC = (props: { todos: Todo[] }) => {
   return (
     <div>
-      <h1>todo</h1>
       {props.todos.map((todo: Todo) => (
         <ul>
           <li>{todo.title}</li>
