@@ -5,6 +5,7 @@ import Database from "better-sqlite3";
 import { BetterSQLite3Database, drizzle } from "drizzle-orm/better-sqlite3";
 import { Item } from "./components/item";
 
+import { eq } from "drizzle-orm";
 import { renderer } from "./components/renderer";
 import { todos } from "./schema";
 import { Todo } from "./types";
@@ -23,13 +24,24 @@ app.get("/", async (c) => {
   console.log(result);
   return c.render(
     <div>
+      {/* AddTodo */}
       {result.map((todo: Todo) => (
         <Item todo={todo} />
       ))}
     </div>
   );
 });
-// app.get("*", renderer);
+
+app.delete("/todo/:id", async (c) => {
+  const id = Number(c.req.param("id"));
+
+  console.log("id", id);
+
+  const deletedTodo = await db.delete(todos).where(eq(todos.id, id)).returning();
+  console.log("deletedTodo", deletedTodo);
+  c.status(200);
+  return c.body(null);
+});
 
 // app.get("/htmx", (c) => {
 //   console.log("htmx");
