@@ -9,6 +9,7 @@ import { zValidator } from "@hono/zod-validator";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { AddTodo } from "./components/addTodo";
+import { ItemForm } from "./components/itemForm";
 import { renderer } from "./components/renderer";
 import { todos } from "./schema";
 import { Todo } from "./types";
@@ -18,6 +19,20 @@ console.log("sqlite", sqlite);
 const db: BetterSQLite3Database = drizzle(sqlite);
 
 const app = new Hono();
+
+app.get("/todo/:id", async (c) => {
+  const id = Number(c.req.param("id"));
+  console.log("id", id);
+  const todo = await db.select().from(todos).where(eq(todos.id, id));
+  return c.render(<Item todo={todo[0]} />);
+});
+
+app.get("/todo/:id/edit", async (c) => {
+  const id = Number(c.req.param("id"));
+  console.log("id", id);
+  const todo = await db.select().from(todos).where(eq(todos.id, id));
+  return c.render(<ItemForm todo={todo[0]} />);
+});
 
 app.get("*", renderer);
 
