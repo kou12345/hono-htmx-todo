@@ -55,32 +55,4 @@ app.delete("/todo/:id", async (c) => {
   return c.body(null);
 });
 
-// app.get("/htmx", (c) => {
-//   console.log("htmx");
-//   return c.html(
-//     <html>
-//       <head>
-//         <script src="https://unpkg.com/htmx.org@1.3.3"></script>
-//       </head>
-//       <body>
-//         <h1 class="text-red-500">htmx</h1>
-//       </body>
-//     </html>
-//   );
-// });
-
-// const Top: FC = (props: { todos: Todo[] }) => {
-//   return (
-//     <div>
-//       {props.todos.map((todo: Todo) => (
-//         <ul>
-//           <li>{todo.title}</li>
-//           <li>{todo.description}</li>
-//           <li>{todo.completed ? "Done" : "in Progress"}</li>
-//         </ul>
-//       ))}
-//     </div>
-//   );
-// };
-
 serve(app);
