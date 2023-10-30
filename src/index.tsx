@@ -34,6 +34,17 @@ app.get("/todo/:id/edit", async (c) => {
   return c.render(<ItemForm todo={todo[0]} />);
 });
 
+app.put("/todo/:id/edit", zValidator("form", z.object({ title: z.string().min(1) })), async (c) => {
+  const id = Number(c.req.param("id"));
+  console.log("id", id);
+
+  const { title } = c.req.valid("form");
+  console.log("title", title);
+
+  const todo = await db.update(todos).set({ title: title }).where(eq(todos.id, id)).returning();
+  return c.render(<Item todo={todo[0]} />);
+});
+
 app.get("*", renderer);
 
 app.get("/", async (c) => {
