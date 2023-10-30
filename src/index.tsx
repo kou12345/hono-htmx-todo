@@ -5,7 +5,10 @@ import Database from "better-sqlite3";
 import { BetterSQLite3Database, drizzle } from "drizzle-orm/better-sqlite3";
 import { Item } from "./components/item";
 
+import { zValidator } from "@hono/zod-validator";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { AddTodo } from "./components/addTodo";
 import { renderer } from "./components/renderer";
 import { todos } from "./schema";
 import { Todo } from "./types";
@@ -24,12 +27,21 @@ app.get("/", async (c) => {
   console.log(result);
   return c.render(
     <div>
-      {/* AddTodo */}
+      <AddTodo />
       {result.map((todo: Todo) => (
         <Item todo={todo} />
       ))}
+      <div id="todo"></div>
     </div>
   );
+});
+
+app.post("/todo", zValidator("form", z.object({ title: z.string().min(1) })), async (c) => {
+  const { title } = c.req.valid("form");
+  console.log("title", title);
+  const todo = await db.insert(todos).values({ title }).returning();
+  console.log("todo", todo);
+  return c.html(<Item todo={todo[0]} />);
 });
 
 app.delete("/todo/:id", async (c) => {
