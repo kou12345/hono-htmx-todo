@@ -3,9 +3,9 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const todos = sqliteTable("todos", {
   id: integer("id").primaryKey(),
-  title: text("title"),
+  title: text("title").notNull(),
   description: text("description"),
   completed: integer("completed", { mode: "boolean" }),
-  createdAt: integer("createdAt", { mode: "timestamp" }).default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }).default(sql`CURRENT_TIMESTAMP`),
+  createdAt: text("createdAt").default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text("updatedAt").default(sql`CURRENT_TIMESTAMP`),
 });

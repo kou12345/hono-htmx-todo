@@ -15,6 +15,20 @@
       "when": 1698710245305,
       "tag": "0001_powerful_bucky",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1698715475129,
+      "tag": "0002_magenta_stephen_strange",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1698717344207,
+      "tag": "0003_sloppy_rhodey",
+      "breakpoints": true
     }
   ]
 }
